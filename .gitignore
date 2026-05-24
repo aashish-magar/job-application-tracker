@@ -2,3 +2,4 @@
 backend-api/bin/
 backend-api/obj/
 backend-api/*.user
+backend-api/.vs/
