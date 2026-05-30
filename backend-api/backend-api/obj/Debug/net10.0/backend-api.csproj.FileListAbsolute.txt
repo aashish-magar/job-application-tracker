@@ -118,10 +118,11 @@ D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\staticwebas
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\staticwebassets.development.json
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\swae.build.ex.cache
-D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\backend-.28638A73.Up2Date
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\backend-api.dll
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\refint\backend-api.dll
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\backend-api.pdb
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\backend-api.genruntimeconfig.cache
 D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\ref\backend-api.dll
+D:\Job-Application-Tracker\backend-api\backend-api\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\Job-Application-Tracker\backend-api\backend-api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

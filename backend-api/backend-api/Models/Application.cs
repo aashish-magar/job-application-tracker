@@ -6,7 +6,7 @@ namespace backend_api.Models
     public class Application
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public int Id { get; set; }
 
         [Required]

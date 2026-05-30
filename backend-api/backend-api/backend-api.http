@@ -1,6 +1,6 @@
 @backend_api_HostAddress = http://localhost:5216
 
-GET {{backend_api_HostAddress}}/weatherforecast/
+POST {{backend_api_HostAddress}}/api/Auth
 Accept: application/json
 
 ###
