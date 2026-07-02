@@ -1,9 +1,14 @@
-﻿using backend_api.Data;
-using backend_api.DTO;
+﻿using backend_api.Common;
+using backend_api.Data;
+using backend_api.DTOs.Auth;
 using backend_api.Models;
 using backend_api.Service.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backend_api.Service
 {
@@ -11,54 +16,110 @@ namespace backend_api.Service
     {
         private readonly AppDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
 
         public AuthService(
             AppDbContext context,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
+            _configuration = configuration;
         }
 
-
-        public async Task<string> RegisterUser(AuthDto request)
+        public async Task<ServiceResult<RegisterResponseDto>> RegisterUser(RegisterRequestDto request)  
         {
-            var checkEmail = await _context.Users
-                .AnyAsync(u => u.Email == request.email);
+            var emailTaken = await _context.Users.AnyAsync(x => x.Email == request.Email);
+            if (emailTaken)
+                return ServiceResult<RegisterResponseDto>.Fail(
+                    "Email already in use", "EMAIL_EXISTS");
 
-            if (checkEmail)
-                return "User already exists with that email";
-
-            var user = new User
+            var newUser = new User
             {
-                Email = request.email,
-                UserName = request.email,
-                PhoneNumber = request.PhoneNumber
+                UserName = request.Email,
+                Email = request.Email
             };
 
-            var result = await _userManager
-                .CreateAsync(user, request.password);
+            var result = await _userManager.CreateAsync(newUser, request.Password);
 
             if (!result.Succeeded)
+                return ServiceResult<RegisterResponseDto>.Fail(
+                    string.Join(", ", result.Errors.Select(e => e.Description)),
+                    "CREATION_FAILED");
+
+            return ServiceResult<RegisterResponseDto>.Ok(new RegisterResponseDto
             {
-                return string.Join(", ",
-                    result.Errors.Select(e => e.Description));
+                UserId = newUser.Id,
+                Email = newUser.Email!,
+                CreatedAt = newUser.CreatedAt,
+                
+            });
+        }
+
+        public async Task<ServiceResult<LoginResponseDto>> LoginUser(LoginRequestDto request)
+        {
+            var checkUser = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+            if (checkUser == null)
+            {
+                return ServiceResult<LoginResponseDto>.Fail(
+                    "User with that email does not exist",
+                    "EMAIL_NOT_EXISTS");
             }
 
-            return "User created successfully";
-        }
+            var signInUser = await _signInManager.PasswordSignInAsync(
+                checkUser.Email,
+                request.Password,
+                false,
+                false);
 
-        public async Task<bool> LoginUser(AuthDto request)
+            if (!signInUser.Succeeded)
+            {
+                return ServiceResult<LoginResponseDto>.Fail(
+                    "Cannot sign in user",
+                    "FAILED_SIGN_IN");
+            }
+
+            // Generate token AFTER successful authentication
+            var token = GenerateJwtToken(checkUser);
+
+            return ServiceResult<LoginResponseDto>.Ok(new LoginResponseDto
+            {
+                UserId = checkUser.Id,
+                Email = checkUser.Email,
+                Token = token
+            });
+        }
+        public  string GenerateJwtToken(User user)
         {
-            var checkUser = await _context.Users.
-                        FirstOrDefaultAsync(u => u.Email == request.email);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,user.Email.ToString())
+                
+            };
 
-            if (checkUser == null) return false;
+            var securityKey = new SymmetricSecurityKey(Encoding
+                                    .UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
 
-            var result = await _userManager
-                .CheckPasswordAsync(checkUser, request.password);  
-            
-            return result;
-        }
+            var signinCred = new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha512);
+
+            var securityToken = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(10),
+                issuer: _configuration.GetSection("Jwt:Issuer").Value,
+                audience: _configuration.GetSection("Jwt:Audience").Value,
+                signingCredentials: signinCred);
+
+            var tokenDescriptor = new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return tokenDescriptor;
+
+    }
+
+        
     }
 }

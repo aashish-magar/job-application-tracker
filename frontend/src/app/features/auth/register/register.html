@@ -1,0 +1,56 @@
+<div class="layout">
+
+  <!-- Editorial panel -->
+  <aside class="panel">
+    <div class="mark"><span class="dot"></span>Ledger</div>
+
+    <div class="panel-copy">
+      <p class="eyebrow">Account · No. 0142</p>
+      <h1 class="display">Open a record,<br><em>not just</em> an account.</h1>
+      <p class="panel-sub">Every entry here is timestamped, signed, and yours. Set up your credentials once — the rest of the system remembers who you are.</p>
+    </div>
+
+    <div class="ledger">
+      <div class="ledger-row"><span class="k">Encryption</span><span class="v">AES-256, at rest</span></div>
+      <div class="ledger-row"><span class="k">Session</span><span class="v">JWT, signed</span></div>
+      <div class="ledger-row"><span class="k">Members</span><span class="v">28,401 and counting</span></div>
+    </div>
+  </aside>
+
+  <!-- Form panel -->
+  <main class="form-side">
+    <div class="card">
+      <div class="card-head">
+        <h1>Create your account</h1>
+        <p>Already registered? <a href="/login">Sign in</a></p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="registerForm" method="post" class="form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="email" placeholder="ada@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" formControlName="phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" formControlName="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          <span class="hint">Use 8+ characters with a number and a symbol.</span>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" formControlName="confirmPassword" type="password" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          <span class="hint">Use 8+ characters with a number and a symbol.</span>
+        </div>
+
+        <button type="submit" class="submit">Create account</button>
+      </form>
+    </div>
+  </main>
+
+</div>
