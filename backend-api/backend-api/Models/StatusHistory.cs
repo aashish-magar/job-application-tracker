@@ -6,20 +6,15 @@ namespace backend_api.Models
     public class StatusHistory
     {
 
-        [Key]
+ 
         
         public int Id { get; set; }
-
-        [Required]
         public int ApplicationId { get; set; }
-
-        [Required]
-        public string Status { get; set; } = string.Empty;
+        public Application Application { get; set; } = null!;
+        public ApplicationStatus Status { get; set; }
 
         public DateTime ChangedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation
-        [ForeignKey(nameof(ApplicationId))]
-        public Application Application { get; set; } = null!;
+        
     }
 }

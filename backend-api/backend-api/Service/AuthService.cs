@@ -72,16 +72,14 @@ namespace backend_api.Service
                     "EMAIL_NOT_EXISTS");
             }
 
-            var signInUser = await _signInManager.PasswordSignInAsync(
-                checkUser.Email,
-                request.Password,
-                false,
-                false);
+            var passwordValid = await _userManager.CheckPasswordAsync(
+      checkUser,
+      request.Password);
 
-            if (!signInUser.Succeeded)
+            if (!passwordValid)
             {
                 return ServiceResult<LoginResponseDto>.Fail(
-                    "Cannot sign in user",
+                    "Invalid email or password",
                     "FAILED_SIGN_IN");
             }
 
@@ -99,6 +97,7 @@ namespace backend_api.Service
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name,user.Email.ToString())
                 
             };

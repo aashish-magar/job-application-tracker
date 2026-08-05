@@ -162,7 +162,7 @@ namespace backend_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Company")
+                    b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -175,6 +175,12 @@ namespace backend_api.Migrations
                     b.Property<DateTime?>("FollowUpDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Job")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("JobLink")
+                        .HasColumnType("text");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -182,9 +188,11 @@ namespace backend_api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Salary")
                         .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -210,9 +218,8 @@ namespace backend_api.Migrations
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

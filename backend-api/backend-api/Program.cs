@@ -54,6 +54,8 @@ builder.Services.AddAuthentication(options =>{
 );
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ApplicationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

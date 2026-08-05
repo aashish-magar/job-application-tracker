@@ -1,28 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks.Dataflow;
 
 namespace backend_api.Models
 {
     public class Application
     {
-        [Key]
         
         public int Id { get; set; }
 
-        [Required]
         public int UserId { get; set; }
+        public User User { get; set; } = null!;
 
-        [Required]
-        public string Company { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
 
-        [Required]
         public string Role { get; set; } = string.Empty;
+        public JobType Job { get; set; }
+        public string? Salary { get; set; }
 
-        [Required]
         public DateTime DateApplied { get; set; }
-
-        [Required]
-        public string Status { get; set; } = string.Empty; // Applied/Interview/Offer/Rejected
+        public ApplicationStatus Status { get; set; } // Applied/Interview/Offer/Rejected
+        public string? JobLink { get; set; }
 
         public string? Notes { get; set; }
 
@@ -30,10 +28,20 @@ namespace backend_api.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
-
         public ICollection<StatusHistory> StatusHistories { get; set; } = [];
     }
+    public enum ApplicationStatus
+    {
+        Applied =1,
+        Interview=2,
+        Offer=3,
+        Rejected=4
+    }
+    public enum JobType
+    {
+        FullTime = 1,
+        Internship =2,
+        Contract =3
+    }
+    
 }
